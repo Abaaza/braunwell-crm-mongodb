@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "express"]
+    "types": ["node", "express"],
+    "sourceMap": true
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "dist"]

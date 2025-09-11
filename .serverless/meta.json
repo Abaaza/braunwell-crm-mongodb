@@ -1,0 +1,110 @@
+{
+  "C:\\Users\\abaza\\BraunwellCRM-main\\BraunwellCRM-main\\serverless.yml": {
+    "versionFramework": "4.18.2",
+    "servicePath": "C:\\Users\\abaza\\BraunwellCRM-main\\BraunwellCRM-main\\serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "braunwell-crm-api",
+      "frameworkVersion": "4",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs20.x",
+        "stage": "dev",
+        "region": "us-east-1",
+        "environment": {
+          "MONGODB_URI": "${env:MONGODB_URI, 'mongodb+srv://wallmasters:Aa13566964@wallmasters.f7fvy.mongodb.net/crm?retryWrites=true&w=majority'}",
+          "JWT_SECRET": "<REDACTED>",
+          "NODE_ENV": "${self:provider.stage}"
+        },
+        "httpApi": {
+          "cors": {
+            "allowedOrigins": [
+              "*"
+            ],
+            "allowedHeaders": [
+              "Content-Type",
+              "X-Amz-Date",
+              "Authorization",
+              "X-Api-Key",
+              "X-Amz-Security-Token",
+              "X-Amz-User-Agent"
+            ],
+            "allowCredentials": "<REDACTED>"
+          }
+        }
+      },
+      "functions": {
+        "api": {
+          "handler": "server/lambda.handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/{proxy+}",
+                "method": "ANY"
+              }
+            },
+            {
+              "httpApi": {
+                "path": "/",
+                "method": "ANY"
+              }
+            }
+          ],
+          "timeout": 30
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "custom": {
+        "serverless-offline": {
+          "httpPort": 4000,
+          "lambdaPort": 4002
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs20.x",
+      "stage": "dev",
+      "region": "us-east-1",
+      "environment": {
+        "MONGODB_URI": "${env:MONGODB_URI, 'mongodb+srv://wallmasters:Aa13566964@wallmasters.f7fvy.mongodb.net/crm?retryWrites=true&w=majority'}",
+        "JWT_SECRET": "<REDACTED>",
+        "NODE_ENV": "${self:provider.stage}"
+      },
+      "httpApi": {
+        "cors": {
+          "allowedOrigins": [
+            "*"
+          ],
+          "allowedHeaders": [
+            "Content-Type",
+            "X-Amz-Date",
+            "Authorization",
+            "X-Api-Key",
+            "X-Amz-Security-Token",
+            "X-Amz-User-Agent"
+          ],
+          "allowCredentials": "<REDACTED>"
+        }
+      }
+    },
+    "error": {
+      "message": "You must sign in or use a license key with Serverless Framework V.4 and later versions. Please use \"serverless login\".",
+      "stack": "Error: You must sign in or use a license key with Serverless Framework V.4 and later versions. Please use \"serverless login\".\n    at Authentication.getAuthenticatedData (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:806:10899)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Authentication.authenticate (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:808:22245)\n    at async TraditionalRunner.resolveVariablesAndAuthenticate (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:812:2379)\n    at async TraditionalRunner.run (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:1428:27914)\n    at async route (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:1603:2878)\n    at async Object.run (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:1604:3661)\n    at async run2 (file:///C:/Users/abaza/.serverless/releases/4.18.2/package/dist/sf-core.js:1604:4815)"
+    },
+    "serviceRawFile": "service: braunwell-crm-api\nframeworkVersion: '4'\n\nprovider:\n  name: aws\n  runtime: nodejs20.x\n  stage: ${opt:stage, 'dev'}\n  region: us-east-1\n  environment:\n    MONGODB_URI: ${env:MONGODB_URI, 'mongodb+srv://wallmasters:Aa13566964@wallmasters.f7fvy.mongodb.net/crm?retryWrites=true&w=majority'}\n    JWT_SECRET: ${env:JWT_SECRET, 'your-super-secret-jwt-key-change-this-in-production'}\n    NODE_ENV: ${self:provider.stage}\n  httpApi:\n    cors:\n      allowedOrigins:\n        - '*'\n      allowedHeaders:\n        - Content-Type\n        - X-Amz-Date\n        - Authorization\n        - X-Api-Key\n        - X-Amz-Security-Token\n        - X-Amz-User-Agent\n      allowCredentials: true\n\nfunctions:\n  api:\n    handler: server/lambda.handler\n    events:\n      - httpApi:\n          path: /{proxy+}\n          method: ANY\n      - httpApi:\n          path: /\n          method: ANY\n    timeout: 30\n\nplugins:\n  - serverless-offline\n\ncustom:\n  serverless-offline:\n    httpPort: 4000\n    lambdaPort: 4002",
+    "command": [
+      "deploy"
+    ],
+    "options": {
+      "verbose": true
+    },
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: BraunwellCRM API Backend
+
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+      AllowCredentials: true
+
+Parameters:
+  MongoDbUri:
+    Type: String
+    Default: "mongodb+srv://wallmasters:Aa13566964@wallmasters.f7fvy.mongodb.net/crm?retryWrites=true&w=majority"
+    Description: MongoDB connection string
+  
+  JwtSecret:
+    Type: String
+    Default: "your-super-secret-jwt-key-change-this-in-production"
+    Description: JWT secret key
+
+Resources:
+  BraunwellCrmApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: braunwell-crm-api
+      CodeUri: ./
+      Handler: server/dist/lambda.handler
+      Runtime: nodejs20.x
+      MemorySize: 512
+      Timeout: 30
+      Environment:
+        Variables:
+          MONGODB_URI: !Ref MongoDbUri
+          JWT_SECRET: !Ref JwtSecret
+          NODE_ENV: production
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+    Export:
+      Name: BraunwellCrmApiUrl

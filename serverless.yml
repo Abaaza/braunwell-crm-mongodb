@@ -1,0 +1,44 @@
+service: braunwell-crm-api
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  environment:
+    MONGODB_URI: ${env:MONGODB_URI, 'mongodb+srv://wallmasters:Aa13566964@wallmasters.f7fvy.mongodb.net/crm?retryWrites=true&w=majority'}
+    JWT_SECRET: ${env:JWT_SECRET, 'your-super-secret-jwt-key-change-this-in-production'}
+    NODE_ENV: ${self:provider.stage}
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+        - X-Amz-User-Agent
+      allowCredentials: true
+
+functions:
+  api:
+    handler: server/lambda.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
+    timeout: 30
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4002
