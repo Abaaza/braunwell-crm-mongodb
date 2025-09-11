@@ -1,0 +1,9 @@
+{
+  "name": "braunwell-crm-mongodb",
+  "platform": "WEB_COMPUTE",
+  "buildSpec": "version: 1\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - npm ci\n    build:\n      commands:\n        - npm run build\n  artifacts:\n    baseDirectory: .next\n    files:\n      - '**/*'\n  cache:\n    paths:\n      - node_modules/**/*",
+  "environmentVariables": {
+    "NEXT_PUBLIC_API_URL": "http://localhost:5000",
+    "_CUSTOM_IMAGE": "amplify:al2023"
+  }
+}

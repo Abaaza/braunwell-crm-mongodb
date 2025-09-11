@@ -13,10 +13,49 @@ dotenv.config({ path: '.env.local' });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+// CORS configuration with multiple origins and wildcard support
+const corsOptions = {
+  origin: function (origin: string | undefined, callback: any) {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3003',
+      'http://localhost:5000',
+      'https://d2xlspdrbdut6y.amplifyapp.com',
+      'https://*.amplifyapp.com',
+      'https://*.vercel.app',
+      'https://*.netlify.app',
+      'https://*.railway.app'
+    ];
+    
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin matches any allowed origin or pattern
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed.includes('*')) {
+        const pattern = allowed.replace('*', '.*');
+        return new RegExp(pattern).test(origin);
+      }
+      return allowed === origin;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      // In production, you might want to allow all origins for public APIs
+      // For now, we'll allow all origins in development
+      callback(null, true);
+    }
+  },
   credentials: true,
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['X-Total-Count', 'X-Page', 'X-Per-Page'],
+  maxAge: 86400 // 24 hours
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));

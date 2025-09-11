@@ -5,7 +5,7 @@ provider:
   name: aws
   runtime: nodejs20.x
   stage: ${opt:stage, 'dev'}
-  region: us-east-1
+  region: me-south-1
   environment:
     MONGODB_URI: ${env:MONGODB_URI, 'mongodb+srv://wallmasters:Aa13566964@wallmasters.f7fvy.mongodb.net/crm?retryWrites=true&w=majority'}
     JWT_SECRET: ${env:JWT_SECRET, 'your-super-secret-jwt-key-change-this-in-production'}
