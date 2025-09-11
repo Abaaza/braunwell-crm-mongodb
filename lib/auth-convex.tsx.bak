@@ -1,0 +1,147 @@
+"use client"
+
+import { createContext, useContext, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { getCookie, setCookie, deleteCookie } from "cookies-next"
+import { useQuery, useMutation } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { Id } from "@/convex/_generated/dataModel"
+
+interface User {
+  id: Id<"users">
+  email: string
+  name: string
+  role: "admin" | "user"
+  avatar?: string
+}
+
+interface AuthContextType {
+  user: User | null
+  loading: boolean
+  login: (email: string, password: string, csrfToken?: string) => Promise<void>
+  logout: () => Promise<void>
+  isAdmin: boolean
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  
+  const token = getCookie("session-token") as string | undefined
+  const demoMode = getCookie("demo-mode") === "true"
+  const currentUser = useQuery(api.auth.getCurrentUser, demoMode ? "skip" : { token })
+  const loginMutation = useMutation(api.auth.login)
+  const logoutMutation = useMutation(api.auth.logout)
+  
+  useEffect(() => {
+    if (demoMode) {
+      // Set demo user
+      setUser({
+        id: "demo" as Id<"users">,
+        email: "demo@braunwell.co.uk",
+        name: "Demo User",
+        role: "admin",
+      })
+      setLoading(false)
+      return
+    }
+    
+    if (currentUser === undefined) {
+      return // Still loading
+    }
+    
+    if (currentUser) {
+      setUser(currentUser)
+    } else {
+      setUser(null)
+    }
+    
+    setLoading(false)
+  }, [currentUser, demoMode])
+  
+  const login = async (email: string, password: string, csrfToken?: string) => {
+    try {
+      // Add CSRF token to headers if provided
+      const headers: Record<string, string> = {}
+      if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken
+      }
+      
+      const result = await loginMutation({ 
+        email, 
+        password,
+        clientIp: undefined // Optional parameter
+      })
+      
+      if (!result || !result.token) {
+        throw new Error("Invalid response from server")
+      }
+      
+      setCookie("session-token", result.token, {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      })
+      setUser(result.user)
+      router.push("/dashboard")
+    } catch (error) {
+      console.error("Login error in auth context:", error)
+      throw error
+    }
+  }
+  
+  const logout = async () => {
+    if (token) {
+      await logoutMutation({ token })
+      deleteCookie("session-token")
+    }
+    setUser(null)
+    router.push("/login")
+  }
+  
+  const isAdmin = user?.role === "admin"
+  
+  return (
+    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider")
+  }
+  return context
+}
+
+export function ProtectedRoute({ children, adminOnly = false }: {
+  children: React.ReactNode
+  adminOnly?: boolean
+}) {
+  const { user, loading, isAdmin } = useAuth()
+  const router = useRouter()
+  
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login")
+    } else if (!loading && adminOnly && !isAdmin) {
+      router.push("/dashboard")
+    }
+  }, [user, loading, adminOnly, isAdmin, router])
+  
+  if (loading) {
+    return <div>Loading...</div>
+  }
+  
+  if (!user || (adminOnly && !isAdmin)) {
+    return null
+  }
+  
+  return <>{children}</>
+}

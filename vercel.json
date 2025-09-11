@@ -1,0 +1,12 @@
+{
+  "env": {
+    "CONVEX_DEPLOYMENT": "prod:resilient-pig-8",
+    "NEXT_PUBLIC_CONVEX_URL": "https://resilient-pig-8.convex.cloud"
+  },
+  "build": {
+    "env": {
+      "CONVEX_DEPLOYMENT": "prod:resilient-pig-8",
+      "NEXT_PUBLIC_CONVEX_URL": "https://resilient-pig-8.convex.cloud"
+    }
+  }
+}
