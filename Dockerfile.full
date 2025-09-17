@@ -1,0 +1,48 @@
+# Full stack deployment - Backend API + Next.js Frontend
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install PM2 for process management
+RUN npm install -g pm2
+
+# Copy package files
+COPY package*.json ./
+COPY server/package*.json ./server/
+
+# Install dependencies
+RUN npm ci
+
+# Copy application code
+COPY . .
+
+# Build Next.js
+RUN npm run build
+
+# Build TypeScript backend
+RUN npm run build:server
+
+# Create PM2 ecosystem file
+RUN echo 'module.exports = { \
+  apps: [{ \
+    name: "backend", \
+    script: "./server/dist/index.js", \
+    env: { \
+      PORT: 5000, \
+      NODE_ENV: "production" \
+    } \
+  }, { \
+    name: "frontend", \
+    script: "npm", \
+    args: "start", \
+    env: { \
+      PORT: 3000, \
+      NODE_ENV: "production" \
+    } \
+  }] \
+}' > ecosystem.config.js
+
+EXPOSE 3000 5000
+
+# Start both services
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]

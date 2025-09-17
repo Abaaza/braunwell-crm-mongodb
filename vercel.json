@@ -1,12 +1,14 @@
 {
+  "framework": "nextjs",
+  "regions": ["bom1"],
   "env": {
-    "CONVEX_DEPLOYMENT": "prod:resilient-pig-8",
-    "NEXT_PUBLIC_CONVEX_URL": "https://resilient-pig-8.convex.cloud"
+    "MONGODB_URI": "@mongodb-uri",
+    "JWT_SECRET": "@jwt-secret",
+    "NEXT_PUBLIC_API_URL": "@api-url"
   },
   "build": {
     "env": {
-      "CONVEX_DEPLOYMENT": "prod:resilient-pig-8",
-      "NEXT_PUBLIC_CONVEX_URL": "https://resilient-pig-8.convex.cloud"
+      "NEXT_PUBLIC_API_URL": "@api-url"
     }
   }
 }
