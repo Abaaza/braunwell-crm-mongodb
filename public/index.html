@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BraunwellCRM - Modern CRM for UK Businesses</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .feature h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .feature p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .cta {
+            margin-top: 3rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0,255,0,0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0,255,0,0.3);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .subtitle { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BraunwellCRM</h1>
+        <p class="subtitle">Modern CRM Solution for UK Businesses</p>
+
+        <div class="features">
+            <div class="feature">
+                <h3>📊 Project Management</h3>
+                <p>Track projects, tasks, and deadlines with ease</p>
+            </div>
+            <div class="feature">
+                <h3>💼 Contact Management</h3>
+                <p>Organize and manage all your business contacts</p>
+            </div>
+            <div class="feature">
+                <h3>💰 Invoicing</h3>
+                <p>UK-compliant invoice generation with VAT handling</p>
+            </div>
+            <div class="feature">
+                <h3>📈 Analytics</h3>
+                <p>Real-time insights and customizable dashboards</p>
+            </div>
+            <div class="feature">
+                <h3>🔒 Secure</h3>
+                <p>Enterprise-grade security with audit trails</p>
+            </div>
+            <div class="feature">
+                <h3>☁️ Cloud-Based</h3>
+                <p>Access from anywhere with MongoDB Atlas</p>
+            </div>
+        </div>
+
+        <div class="status">
+            <h3>🚀 Deployment Status</h3>
+            <p>✅ Successfully deployed to AWS S3 + CloudFront</p>
+            <p>📍 Region: ME-South-1 (Bahrain)</p>
+            <p>🔗 Backend: MongoDB Atlas Connected</p>
+        </div>
+
+        <div class="cta">
+            <a href="/login" class="btn">Get Started</a>
+        </div>
+    </div>
+</body>
+</html>
